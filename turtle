@@ -1,0 +1,88 @@
+%%
+rosinit; %Conexión con nodo maestro
+%%
+velPub = rospublisher('/turtle1/cmd_vel','geometry_msgs/Twist'); %Creación publicador
+velMsg = rosmessage(velPub); %Creación de mensaje
+teleport = rossvcclient('/turtle1/teleport_absolute', 'turtlesim/TeleportAbsolute');
+telReq = rosmessage(teleport);
+%%
+x = 1;
+%Mover en X
+velMsg.Linear.X = x; %Valor del mensaje
+send(velPub,velMsg); %Envio
+velMsg.Linear.X = 0; %Valor del mensaje
+pause(1)
+%%
+y = 1;
+%Mover en Y
+velMsg.Linear.Y = y; %Valor del mensaje
+send(velPub,velMsg); %Envio
+velMsg.Linear.Y = 0;
+pause(1)
+%%
+z = 1;
+%Girar
+velMsg.Angular.Z = z*pi/4;
+send(velPub,velMsg); %Envio
+velMsg.Angular.Z = 0;
+pause(1)
+%%
+%Teleport 1
+telReq.X = 1.8;
+telReq.Y = 4.7;
+telReq.Theta = 1*pi/4;
+call(teleport, telReq)
+%%
+%Teleport 2
+telReq.X = 8.2;
+telReq.Y = 1.5;
+telReq.Theta = -1*pi/2;
+call(teleport, telReq)
+%%
+%Teleport 3
+telReq.X = 3.6;
+telReq.Y = 9.1;
+telReq.Theta = 5*pi/4;
+call(teleport, telReq)
+%%
+%Teleport 0
+telReq.X = 5.54;
+telReq.Y = 5.54;
+telReq.Theta = 0*pi/2;
+call(teleport, telReq)
+%%
+x = 1;
+y = 1;
+%Mover en X e y
+velMsg.Linear.X = x; %Valor del mensaje
+velMsg.Linear.Y = y; %Valor del mensaje
+send(velPub,velMsg); %Envio
+velMsg.Linear.X = 0; %Valor del mensaje
+velMsg.Linear.Y = 0; %Valor del mensaje
+pause(1)
+%%
+x = 1;
+z = 1;
+%Mover en X y Girar
+velMsg.Linear.X = x;%Valor del mensaje
+velMsg.Angular.Z = z*pi/4;
+send(velPub,velMsg); %Envio
+velMsg.Linear.X = 0;
+velMsg.Angular.Z = 0;
+pause(1)
+%%
+y = 1;
+z = 1;
+%Mover en Y y Girar
+velMsg.Linear.Y = y;%Valor del mensaje
+velMsg.Angular.Z = z*pi/4;
+send(velPub,velMsg); %Envio
+velMsg.Linear.Y = 0;
+velMsg.Angular.Z = 0;
+pause(1)
+%% 
+%Obtener Pose
+suscrPose = rossubscriber("/turtle1/pose",'turtlesim/Pose');
+suscrPose.LatestMessage
+%%
+rosshutdown
